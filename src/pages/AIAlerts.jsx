@@ -1,6 +1,11 @@
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import Anthropic from '@anthropic-ai/sdk';
 import { mockAlerts, alertSystemPrompt, buildAlertContext } from '../data';
+
+const CHAT_SYSTEM_PROMPT = `You are Atlas, an organizational intelligence assistant for ICEYE's manufacturing transformation platform. You have full visibility into all plant data including Leadership Scores, Workforce Readiness, Delivery Performance, and Onboarding metrics. Answer questions concisely and specifically, referencing actual plant data when relevant.
+
+${buildAlertContext()}`;
+
 
 const SEVERITY_CONFIG = {
   critical: {
@@ -105,6 +110,49 @@ export default function AIAlerts() {
   const [apiKey, setApiKey] = useState(import.meta.env.VITE_ANTHROPIC_API_KEY || '');
   const [showKeyInput, setShowKeyInput] = useState(!import.meta.env.VITE_ANTHROPIC_API_KEY);
   const [lastRefreshed, setLastRefreshed] = useState(null);
+
+  const [chatMessages, setChatMessages] = useState([]);
+  const [chatInput, setChatInput] = useState('');
+  const [chatLoading, setChatLoading] = useState(false);
+  const messagesEndRef = useRef(null);
+
+  useEffect(() => {
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  }, [chatMessages]);
+
+  async function sendMessage() {
+    const text = chatInput.trim();
+    if (!text || chatLoading) return;
+    if (!apiKey.trim()) {
+      setError('Please enter your Anthropic API key to use the chat.');
+      return;
+    }
+
+    const userMsg = { role: 'user', content: text };
+    const updated = [...chatMessages, userMsg];
+    setChatMessages(updated);
+    setChatInput('');
+    setChatLoading(true);
+
+    try {
+      const client = new Anthropic({ apiKey: apiKey.trim(), dangerouslyAllowBrowser: true });
+      const response = await client.messages.create({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 1024,
+        system: CHAT_SYSTEM_PROMPT,
+        messages: updated,
+      });
+      const reply = response.content.find(b => b.type === 'text')?.text || '';
+      setChatMessages(prev => [...prev, { role: 'assistant', content: reply }]);
+    } catch (err) {
+      setChatMessages(prev => [...prev, {
+        role: 'assistant',
+        content: `Error: ${err.message || 'Failed to get response.'}`,
+      }]);
+    } finally {
+      setChatLoading(false);
+    }
+  }
 
   async function refreshAlerts() {
     if (!apiKey.trim()) {
@@ -333,11 +381,141 @@ export default function AIAlerts() {
         </div>
       )}
 
-      {/* CSS for spinner */}
+      {/* Divider */}
+      <div style={{ borderTop: '2px solid #e5e7eb', margin: '8px 0 28px' }} />
+
+      {/* Chat section */}
+      <div style={{ marginBottom: 40 }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 16 }}>
+          <span style={{ fontSize: 16 }}>💬</span>
+          <h2 style={{ fontSize: 16, fontWeight: 700, color: '#111827', margin: 0 }}>Ask Atlas</h2>
+          <span style={{ fontSize: 12, color: '#9ca3af' }}>Chat with your plant data</span>
+        </div>
+
+        <div style={{
+          display: 'flex', flexDirection: 'column',
+          height: 480, borderRadius: 12, overflow: 'hidden',
+          border: '1px solid #d1d5db',
+        }}>
+          {/* Messages */}
+          <div style={{
+            flex: 1, overflowY: 'auto',
+            padding: '20px 20px 12px',
+            background: '#011C22',
+            display: 'flex', flexDirection: 'column', gap: 14,
+          }}>
+            {chatMessages.length === 0 && (
+              <div style={{
+                display: 'flex', flex: 1, alignItems: 'center', justifyContent: 'center',
+                flexDirection: 'column', gap: 8,
+              }}>
+                <span style={{ fontSize: 28 }}>🛰️</span>
+                <p style={{ fontSize: 13, color: '#4b7a72', margin: 0, textAlign: 'center' }}>
+                  Ask about any plant, leadership score,<br />onboarding status, or delivery risk.
+                </p>
+              </div>
+            )}
+            {chatMessages.map((msg, i) => (
+              <div key={i} style={{
+                display: 'flex',
+                justifyContent: msg.role === 'user' ? 'flex-end' : 'flex-start',
+              }}>
+                {msg.role === 'assistant' && (
+                  <div style={{
+                    width: 28, height: 28, borderRadius: '50%',
+                    background: '#00c2a8', display: 'flex', alignItems: 'center', justifyContent: 'center',
+                    fontSize: 13, flexShrink: 0, marginRight: 8, marginTop: 2,
+                  }}>
+                    A
+                  </div>
+                )}
+                <div style={{
+                  maxWidth: '72%',
+                  padding: '10px 14px',
+                  borderRadius: msg.role === 'user' ? '12px 12px 2px 12px' : '12px 12px 12px 2px',
+                  background: msg.role === 'user' ? '#00c2a8' : '#0d3540',
+                  color: msg.role === 'user' ? '#011C22' : '#e2f4f1',
+                  fontSize: 13, lineHeight: '1.6',
+                  fontWeight: msg.role === 'user' ? 600 : 400,
+                  whiteSpace: 'pre-wrap',
+                }}>
+                  {msg.content}
+                </div>
+              </div>
+            ))}
+            {chatLoading && (
+              <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                <div style={{
+                  width: 28, height: 28, borderRadius: '50%',
+                  background: '#00c2a8', display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  fontSize: 13, flexShrink: 0,
+                }}>
+                  A
+                </div>
+                <div style={{
+                  padding: '10px 16px', borderRadius: '12px 12px 12px 2px',
+                  background: '#0d3540', display: 'flex', gap: 5, alignItems: 'center',
+                }}>
+                  {[0, 1, 2].map(d => (
+                    <span key={d} style={{
+                      width: 6, height: 6, borderRadius: '50%', background: '#00c2a8',
+                      display: 'inline-block',
+                      animation: `pulse 1.2s ease-in-out ${d * 0.2}s infinite`,
+                    }} />
+                  ))}
+                </div>
+              </div>
+            )}
+            <div ref={messagesEndRef} />
+          </div>
+
+          {/* Input bar */}
+          <div style={{
+            display: 'flex', gap: 0,
+            background: '#022a34',
+            borderTop: '1px solid #0d3540',
+            padding: '12px 14px',
+          }}>
+            <input
+              type="text"
+              value={chatInput}
+              onChange={e => setChatInput(e.target.value)}
+              onKeyDown={e => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); } }}
+              placeholder="Ask about plant data, risks, onboarding..."
+              style={{
+                flex: 1, background: '#0d3540', border: '1px solid #1a4a56',
+                borderRadius: '8px 0 0 8px', padding: '10px 14px',
+                fontSize: 13, color: '#e2f4f1', outline: 'none',
+              }}
+            />
+            <button
+              onClick={sendMessage}
+              disabled={chatLoading || !chatInput.trim()}
+              style={{
+                padding: '10px 18px',
+                borderRadius: '0 8px 8px 0',
+                background: chatLoading || !chatInput.trim() ? '#1a4a56' : '#00c2a8',
+                color: chatLoading || !chatInput.trim() ? '#4b7a72' : '#011C22',
+                fontWeight: 700, fontSize: 13, border: 'none',
+                cursor: chatLoading || !chatInput.trim() ? 'not-allowed' : 'pointer',
+                transition: 'background 0.15s',
+              }}
+            >
+              Send
+            </button>
+          </div>
+        </div>
+      </div>
+
+      {/* CSS for spinner + pulse */}
       <style>{`
         @keyframes spin {
           from { transform: rotate(0deg); }
           to { transform: rotate(360deg); }
+        }
+        @keyframes pulse {
+          0%, 80%, 100% { opacity: 0.3; transform: scale(0.8); }
+          40% { opacity: 1; transform: scale(1); }
         }
       `}</style>
     </div>
