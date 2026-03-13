@@ -2,7 +2,10 @@ import { BrowserRouter, Routes, Route, NavLink } from 'react-router-dom';
 import { mockAlerts } from './data';
 import OrgHealth from './pages/OrgHealth';
 import PlantDetail from './pages/PlantDetail';
+import LeadershipSystem from './pages/LeadershipSystem';
+import LeaderDetail from './pages/LeaderDetail';
 import Onboarding from './pages/Onboarding';
+import Inputs from './pages/Inputs';
 import Playbook from './pages/Playbook';
 import AIAlerts from './pages/AIAlerts';
 
@@ -11,6 +14,18 @@ function GridIcon() {
     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
       <rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/>
       <rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/>
+    </svg>
+  );
+}
+function NetworkIcon() {
+  return (
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <circle cx="12" cy="5" r="2"/>
+      <circle cx="5" cy="19" r="2"/>
+      <circle cx="19" cy="19" r="2"/>
+      <line x1="12" y1="7" x2="12" y2="13"/>
+      <line x1="12" y1="13" x2="5.5" y2="17.5"/>
+      <line x1="12" y1="13" x2="18.5" y2="17.5"/>
     </svg>
   );
 }
@@ -31,6 +46,17 @@ function BookIcon() {
     </svg>
   );
 }
+function EditIcon() {
+  return (
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+      <polyline points="14 2 14 8 20 8"/>
+      <line x1="16" y1="13" x2="8" y2="13"/>
+      <line x1="16" y1="17" x2="8" y2="17"/>
+      <line x1="10" y1="9" x2="8" y2="9"/>
+    </svg>
+  );
+}
 function BellIcon() {
   return (
     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -41,10 +67,12 @@ function BellIcon() {
 }
 
 const NAV = [
-  { to: '/', label: 'Org Health Dashboard', Icon: GridIcon },
-  { to: '/onboarding', label: 'Onboarding Framework', Icon: UsersIcon },
-  { to: '/playbook', label: 'Playbook', Icon: BookIcon },
-  { to: '/alerts', label: 'AI Alerts', Icon: BellIcon, badge: true },
+  { to: '/',            label: 'Org Health Dashboard',  Icon: GridIcon },
+  { to: '/leadership',  label: 'Leadership System',     Icon: NetworkIcon },
+  { to: '/onboarding',  label: 'Workforce Readiness',   Icon: UsersIcon },
+  { to: '/playbook',    label: 'Playbook',               Icon: BookIcon },
+  { to: '/inputs',      label: 'Field Inputs',           Icon: EditIcon },
+  { to: '/alerts',      label: 'AI Alerts',              Icon: BellIcon, badge: true },
 ];
 
 function Sidebar() {
@@ -116,8 +144,11 @@ export default function App() {
           <Routes>
             <Route path="/" element={<OrgHealth />} />
             <Route path="/plant/:id" element={<PlantDetail />} />
+            <Route path="/leadership" element={<LeadershipSystem />} />
+            <Route path="/leadership/:leaderId" element={<LeaderDetail />} />
             <Route path="/onboarding" element={<Onboarding />} />
             <Route path="/onboarding/:plantId" element={<Onboarding />} />
+            <Route path="/inputs" element={<Inputs />} />
             <Route path="/playbook" element={<Playbook />} />
             <Route path="/alerts" element={<AIAlerts />} />
           </Routes>

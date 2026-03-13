@@ -119,6 +119,52 @@ export const leadershipObservations = {
   ],
 };
 
+// ─── WORKFORCE OBSERVATIONS ──────────────────────────────────────────────────
+export const workforceObservations = {
+  helsinki: [
+    { date: 'Mar 6', source: 'Review', text: 'All 8 onboardees completed final sign-off — TtP holding at baseline 8 weeks' },
+    { date: 'Feb 23', source: '1:1', text: 'Manager feedback positive — W10 cross-functional integration module performing well' },
+  ],
+  athens: [
+    { date: 'Mar 5', source: 'Review', text: 'W6 independent task milestone lagging — 2 employees delayed by tooling access issues' },
+    { date: 'Mar 3', source: '1:1', text: 'Manager reports onboarding capacity strained — 2 open slots unmatched to hiring demand' },
+  ],
+  valencia: [
+    { date: 'Mar 3', source: 'Review', text: 'TtP tracking +1 week above baseline — shadowing extension absorbing extra time' },
+    { date: 'Mar 1', source: '1:1', text: 'Throughput at 75% demand — one hire pending start date confirmation' },
+  ],
+  warsaw: [
+    { date: 'Mar 4', source: 'Review', text: 'TtP at +5 weeks — W4 milestone not yet reached for either active onboardee' },
+    { date: 'Mar 6', source: '1:1', text: 'Manager flagged onboarding framework not fully localized — translation gaps in W2 module' },
+  ],
+  irvine: [
+    { date: 'Mar 6', source: 'Review', text: 'All 6 onboardees on track — TtP matching Helsinki baseline at 8 weeks' },
+    { date: 'Mar 2', source: '1:1', text: 'Manager reports high quality sign-offs — W8 QC certification completion rate 100%' },
+  ],
+};
+
+// ─── ORG HEALTH OBSERVATIONS ─────────────────────────────────────────────────
+export const orgHealthObservations = {
+  helsinki: [
+    { date: 'Mar 6', source: 'Forum', text: 'Helsinki holding green across all three areas — referenced as cross-site benchmark' },
+    { date: 'Mar 1', source: '1:1', text: 'Delivery on track — Gen4 satellite ramp at 100% of planned rate' },
+  ],
+  athens: [
+    { date: 'Mar 5', source: 'Forum', text: 'Delivery red — Q2 milestone at risk from stacked delays in leadership and workforce' },
+    { date: 'Mar 3', source: '1:1', text: 'Cross-area risk: leadership and workforce gaps compounding delivery exposure' },
+  ],
+  valencia: [
+    { date: 'Mar 3', source: '1:1', text: 'Delivery yellow — production schedule tight but no formal milestone breach yet' },
+  ],
+  warsaw: [
+    { date: 'Mar 4', source: 'Forum', text: 'All areas in watch or below — Warsaw flagged for CMO review at next cross-site forum' },
+    { date: 'Mar 6', source: '1:1', text: 'Delivery yellow despite early-stage ramp — demand planning ahead of current capacity' },
+  ],
+  irvine: [
+    { date: 'Mar 6', source: '1:1', text: 'Org health strong — leadership and workforce both green, delivery monitoring Gen4 yield targets' },
+  ],
+};
+
 // ─── WORKFORCE READINESS ─────────────────────────────────────────────────────
 export const workforceData = {
   helsinki: { timeToProductivity: 8, baseline: 8, throughputIn: 8, throughputDemand: 8 },
