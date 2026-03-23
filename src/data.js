@@ -352,7 +352,7 @@ export const mockAlerts = [
 ];
 
 // ─── SYSTEM PROMPT FOR AI ALERTS ─────────────────────────────────────────────
-export const alertSystemPrompt = `You are an organizational intelligence agent for Atlas, ICEYE's manufacturing transformation platform. Analyze the provided plant data across Leadership Score, Workforce Readiness and Delivery Performance. Identify the 3 most critical risks, 2 watch items, and 1 cross-site insight. For each, provide a severity, area tag, plant, 2-sentence analysis and a concrete suggested action. Respond in JSON array format.
+export const alertSystemPrompt = `You are an organizational intelligence agent for The Eye, ICEYE's manufacturing transformation platform. Analyze the provided plant data across Leadership Score, Workforce Readiness and Delivery Performance. Identify the 3 most critical risks, 2 watch items, and 1 cross-site insight. For each, provide a severity, area tag, plant, 2-sentence analysis and a concrete suggested action. Respond in JSON array format.
 
 Each item must have this shape:
 {

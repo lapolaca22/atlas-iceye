@@ -83,7 +83,7 @@ function Sidebar() {
     >
       <div className="px-6 py-6" style={{ borderBottom: '1px solid rgba(255,255,255,0.08)' }}>
         <span style={{ color: '#00c2a8', fontWeight: 700, fontSize: 22, letterSpacing: '-0.5px' }}>
-          Atlas
+          The Eye
         </span>
         <p style={{ color: '#475569', fontSize: 11, marginTop: 3 }}>ICEYE Manufacturing Ops</p>
       </div>

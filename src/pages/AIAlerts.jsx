@@ -2,7 +2,7 @@ import { useState, useRef, useEffect } from 'react';
 import Anthropic from '@anthropic-ai/sdk';
 import { mockAlerts, alertSystemPrompt, buildAlertContext } from '../data';
 
-const CHAT_SYSTEM_PROMPT = `You are Atlas, an organizational intelligence assistant for ICEYE's manufacturing transformation platform. You have full visibility into all plant data including Leadership Scores, Workforce Readiness, Delivery Performance, and Onboarding metrics. Answer questions concisely and specifically, referencing actual plant data when relevant.
+const CHAT_SYSTEM_PROMPT = `You are The Eye, an organizational intelligence assistant for ICEYE's manufacturing transformation platform. You have full visibility into all plant data including Leadership Scores, Workforce Readiness, Delivery Performance, and Onboarding metrics. Answer questions concisely and specifically, referencing actual plant data when relevant.
 
 ${buildAlertContext()}`;
 
@@ -388,7 +388,7 @@ export default function AIAlerts() {
       <div style={{ marginBottom: 40 }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 16 }}>
           <span style={{ fontSize: 16 }}>💬</span>
-          <h2 style={{ fontSize: 16, fontWeight: 700, color: '#111827', margin: 0 }}>Ask Atlas</h2>
+          <h2 style={{ fontSize: 16, fontWeight: 700, color: '#111827', margin: 0 }}>Ask The Eye</h2>
           <span style={{ fontSize: 12, color: '#9ca3af' }}>Chat with your plant data</span>
         </div>
 
